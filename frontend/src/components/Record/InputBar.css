@@ -29,3 +29,17 @@
   margin-left: 10px;
   cursor: pointer;
 }
+
+
+.record-btn, .audio-upload, .image-upload {
+  margin-bottom: 10px;
+}
+
+.audio-preview, .image-preview {
+  margin-top: 10px;
+  max-width: 100%;
+}
+
+.image-preview {
+  max-height: 150px;
+}
