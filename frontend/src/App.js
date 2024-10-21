@@ -1,10 +1,11 @@
 import React from 'react';
-import SearchPage from './components/SearchPage/SearchPage';
+import {RouterProvider, createBrowserRouter} from 'react-router-dom';
+import router from './routes/routes';
 
 function App() {
     return (
         <div className="App">
-            <SearchPage />
+            <RouterProvider router={router} />
         </div>
     );
 }
