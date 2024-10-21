@@ -5,7 +5,7 @@ import './SearchPage.css';
 const SearchPage = () => {
     return (
         <div className="search-page">
-            <div className="logo">musong</div>
+            <div className="search-page__logo">musong</div>
             <SearchBar modifier="search-container--page" />
         </div>
     );

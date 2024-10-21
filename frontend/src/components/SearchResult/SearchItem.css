@@ -1,0 +1,25 @@
+.search-item {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 8px;
+  }
+  
+  .search-item__link {
+    text-decoration: none;
+    color: #1a0dab;
+  }
+  
+  .search-item__link:hover {
+    text-decoration: underline;
+  }
+  
+  .search-item__title {
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+  
+  .search-item__description {
+    font-size: 14px;
+    color: #4d5156;
+  }
+  
