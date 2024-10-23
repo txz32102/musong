@@ -1,10 +1,30 @@
+.cancel-icon {
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.image-icon {
+  margin-right: 0px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+
+.microphone-icon {
+  margin-left: 0px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+
+
 .input-bar-container {
   background-color: rgb(255, 249, 249);
   position: fixed;
-  bottom: 20px; /* Distance from the bottom */
-  width: 90%; /* Adjust this value to limit the width */
-  max-width: 600px; /* Maximum width for large screens */
-  margin: 0 auto; /* Center the container horizontally */
+  bottom: 20px;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
   left: 0;
   right: 0;
   padding: 10px;
@@ -23,23 +43,4 @@
   border-radius: 4px;
   padding: 10px;
   font-size: 16px;
-}
-
-.cancel-icon {
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-
-.record-btn, .audio-upload, .image-upload {
-  margin-bottom: 10px;
-}
-
-.audio-preview, .image-preview {
-  margin-top: 10px;
-  max-width: 100%;
-}
-
-.image-preview {
-  max-height: 150px;
 }

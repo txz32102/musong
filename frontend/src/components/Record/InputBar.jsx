@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SvgRender from "../../util/SvgRenderer";
+import SvgRender from "./SvgRenderer";
 import UploadData from "./UploadData"; // Import UploadData component
 import DataPreview from "./DataPreview"; // Import DataPreview component
 import "./InputBar.css";
@@ -27,7 +27,8 @@ const InputBar = () => {
   };
 
   return (
-    <div className="input-bar-container">
+
+      <div className="input-bar-container">
       <input
         type="text"
         placeholder="Enter your text here"
@@ -36,14 +37,34 @@ const InputBar = () => {
         onChange={handleInputChange}
       />
 
+    {inputValue && (
+            <SvgRender
+              filePath={require('./svg/cancel.svg').default}
+              scale={0.2}
+              className="cancel-icon"
+              onClick={handleCancelClick}
+            />
+          )}
       <SvgRender
-        filePath={require('./svg/cancel.svg').default}
-        scale={0.2}
-        className="cancel-icon"
+        filePath={require('./svg/image.svg').default}
+        scale={0.3}
+        className="image-icon"
         onClick={handleCancelClick}
       />
 
-      <button onClick={() => setShowUpload(true)}>Upload Data</button>
+      <SvgRender
+        filePath={require('./svg/microphone.svg').default}
+        scale={0.3}
+        className="microphone-icon"
+        onClick={handleCancelClick}
+      />
+
+    <SvgRender
+        filePath={require('./svg/enter.svg').default}
+        scale={0.5}
+        onClick={() => setShowUpload(true)}
+      />
+
 
       {showUpload && (
         <UploadData 
