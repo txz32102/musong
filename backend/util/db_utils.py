@@ -1,15 +1,14 @@
 import mysql.connector
 from typing import List, Dict
 
-# Database connection configuration
-db_config = {
-    'host': 'rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com',
-    'user': 'tester1',
-    'password': 'txzchk691X',
-    'database': 'user_history'  # Replace with your actual database name
-}
+def get_db_connection(host, user, password, database):
+    db_config = {
+        'host': host,
+        'user': user,
+        'password': password,
+        'database': database
+    }
 
-def get_db_connection():
     try:
         connection = mysql.connector.connect(**db_config)
         return connection

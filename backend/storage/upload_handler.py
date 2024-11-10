@@ -1,30 +1,9 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, File, UploadFile, Form, HTTPException
 from typing import Optional
-import mysql.connector
+from util.db_utils import get_db_connection  # Import the utility function
+import mysql.connector  # Import mysql.connector for database operations
 
-app = FastAPI()
-
-# CORS configuration
-origins = [
-    "http://localhost",
-    "http://localhost:3000"
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Database connection configuration
-db_config = {
-    'host': 'rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com',
-    'user': 'tester1',
-    'password': 'txzchk691X',
-    'database': 'Record'
-}
+router = APIRouter()
 
 # SQL query to insert uploaded file data, including the timestamp from the frontend
 INSERT_FILE_QUERY = """
@@ -32,36 +11,37 @@ INSERT INTO history (uid, text, files, file_name, timestamp)
 VALUES (%s, %s, %s, %s, %s)
 """
 
-def get_db_connection():
-    try:
-        connection = mysql.connector.connect(**db_config)
-        return connection
-    except mysql.connector.Error as err:
-        print(f"Database connection error: {err}")
-        return None
-
-@app.post("/upload/")
+@router.post("/upload/")
 async def upload_file(
-    file: UploadFile = File(...), 
     uid: int = Form(...), 
     text: Optional[str] = Form(None),
-    timestamp: str = Form(...)  # Expect timestamp as a string from frontend
+    timestamp: str = Form(...),  # Expect timestamp as a string from frontend
+    file: Optional[UploadFile] = File(None)  # Make file optional
 ):
-    file_content = await file.read()
-    file_name = file.filename
+    # Initialize file_content and file_name to None if no file is provided
+    file_content = None
+    file_name = None
 
+    if file:
+        # Read the file content if the file is provided
+        file_content = await file.read()
+        file_name = file.filename
 
-    print(file_name)
     # Validate timestamp format
     try:
-        # Check if the timestamp is in a valid format, you can adjust this regex if needed
         from datetime import datetime
         datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid timestamp format. Expected 'YYYY-MM-DD HH:MM:SS'")
 
     # Connect to the database
-    connection = get_db_connection()
+    connection = get_db_connection(
+        host='rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com',
+        user='tester1',
+        password='txzchk691X',
+        database='record'
+    )
+
     if connection is None:
         raise HTTPException(status_code=500, detail="Failed to connect to the database")
 
@@ -78,4 +58,4 @@ async def upload_file(
         cursor.close()
         connection.close()
 
-    return {"message": f"File '{file_name}' uploaded and stored successfully with timestamp '{timestamp}'"}
+    return {"message": f"Data uploaded and stored successfully with timestamp '{timestamp}'"}

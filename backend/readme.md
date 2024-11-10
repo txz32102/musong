@@ -8,6 +8,16 @@ curl -X POST "http://localhost:8000/upload/" \
     -F "text=Sample text" \
     -F "file=@/home/musong/workspace/musong/frontend/public/favicon.ico" \
     -F "timestamp=2024-11-10 15:30:00"
+
+
+curl -X POST "http://localhost:8000/upload/" \
+    -F "uid=123456789" \
+    -F "text=Sample text" \
+    -F "timestamp=2024-11-10 15:30:00"
+
+
+curl -OJ http://localhost:8000/history/user/123456789/5/file
+
 ```
 
 
@@ -25,7 +35,7 @@ SELECT id, uid, timestamp, text, file_name FROM history;
 # run the backend 
 
 ```bash
-uvicorn storage.upload_handler:app --host 0.0.0.0 --port 8000 --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 # sql table

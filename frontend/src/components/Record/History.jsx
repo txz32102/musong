@@ -1,61 +1,79 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const History = () => {
-    const [history, setHistory] = useState([]);
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        // Fetch data from the backend
-        axios.get("http://localhost:8000/history")
-            .then(response => setHistory(response.data))
-            .catch(error => console.error("Error fetching history data:", error));
-    }, []);
-
-    // Function to format the timestamp to a more readable date
-    const formatDate = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toLocaleString();  // Adjust formatting as needed
+  // Fetch all history records on component mount
+  useEffect(() => {
+    const fetchHistoryRecords = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/history');
+        setRecords(response.data.records);
+      } catch (err) {
+        setError("Error fetching history records.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return (
-        <div className="history-container">
-            {history.map((entry, index) => (
-                <div key={index} className="history-entry">
-                    {/* Display timestamp */}
-                    {entry.timestamp && (
-                        <div className="history-time">
-                            <strong>Time: </strong>{formatDate(entry.timestamp)}
-                        </div>
-                    )}
+    fetchHistoryRecords();
+  }, []);
 
-                    {/* Display text content */}
-                    {entry.text && <p>{entry.text}</p>}
+  // Function to handle file download
+  const downloadFile = async (recordId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/history/user/${recordId}/file`, {
+        responseType: 'blob', // Handle binary data
+      });
 
-                    {/* Display images if any */}
-                    {entry.images && entry.images.map((image, idx) => (
-                        <img key={idx} src={image} alt={`History Image ${idx}`} className="history-image" />
-                    ))}
+      // Create a Blob from the response data
+      const fileBlob = response.data;
 
-                    {/* Display files if any */}
-                    {entry.files && entry.files.map((file, idx) => (
-                        <div key={idx} className="history-file">
-                            <a href={file} target="_blank" rel="noopener noreferrer">Download File {idx + 1}</a>
-                        </div>
-                    ))}
+      // Create an anchor element to simulate a download
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(fileBlob);  // Create a URL for the Blob
+      const filename = response.headers['content-disposition']?.split('filename=')[1] || 'downloaded_file';
+      link.download = filename;  // Extract filename from response headers
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);  // Remove the link element after clicking
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      setError("Error downloading the file.");
+    }
+  };
 
-                    {/* Display audio if any */}
-                    {entry.audio && entry.audio.map((audio, idx) => (
-                        <div key={idx} className="history-audio">
-                            <audio controls>
-                                <source src={audio} type="audio/mpeg" />
-                                Your browser does not support the audio element.
-                            </audio>
-                        </div>
-                    ))}
-                </div>
-            ))}
-        </div>
-    );
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <div>
+      <h2>All History Records</h2>
+      {records.length === 0 ? (
+        <p>No records found.</p>
+      ) : (
+        <ul>
+          {records.map((record) => (
+            <li key={record.id}>
+              <div>
+                <p><strong>Timestamp:</strong> {new Date(record.timestamp).toLocaleString()}</p>
+                <p><strong>Text:</strong> {record.text || 'No text provided'}</p>
+                <button onClick={() => downloadFile(record.id)}>Download File</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 };
 
 export default History;
