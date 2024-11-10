@@ -24,11 +24,11 @@ export const submitForm = async ({ text, image, audio, setText, setImage, setAud
     }
 
     try {
-        const response = await fetch("http://localhost:8000/upload/", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/upload/`, {
             method: "POST",
             body: formData,
-        });
-
+          });
+          
         if (response.ok) {
             console.log("Data sent successfully!");
             // Clear form after submission

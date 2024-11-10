@@ -11,7 +11,9 @@ const History = () => {
     const fetchHistoryRecords = async () => {
       try {
         const response = await axios.get('http://localhost:8000/history');
-        setRecords(response.data.records);
+        // Sort records by timestamp in descending order (new to old)
+        const sortedRecords = response.data.records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        setRecords(sortedRecords);
       } catch (err) {
         setError("Error fetching history records.");
       } finally {
@@ -25,9 +27,9 @@ const History = () => {
   // Function to handle file download
   const downloadFile = async (recordId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/history/user/${recordId}/file`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/history/user/${recordId}/file`, {
         responseType: 'blob', // Handle binary data
-      });
+      });      
 
       // Create a Blob from the response data
       const fileBlob = response.data;

@@ -14,18 +14,18 @@ db_config = {
 DB_NAME = 'Record'
 TABLE_NAME = 'history'
 
-# SQL statements to create database and table
-CREATE_DATABASE_QUERY = f"CREATE DATABASE IF NOT EXISTS {DB_NAME}"
+# SQL statements to create database and table with utf8mb4 character set and collation
+CREATE_DATABASE_QUERY = f"CREATE DATABASE IF NOT EXISTS {DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 
 CREATE_TABLE_QUERY = f"""
 CREATE TABLE IF NOT EXISTS {DB_NAME}.{TABLE_NAME} (
     id INT AUTO_INCREMENT PRIMARY KEY,
     uid INT(9) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    text TEXT,
+    text TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     files LONGBLOB,
     file_name VARCHAR(255)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 """
 
 INSERT_DUMMY_DATA_QUERY = f"""
@@ -52,7 +52,7 @@ def create_table(cursor):
 def insert_dummy_data(cursor):
     # Generate a random 9-digit user UID
     dummy_uid = random.randint(100000000, 999999999)
-    dummy_text = "This is a dummy text entry"
+    dummy_text = "This is a dummy text entry with emoji 😊"
     dummy_file_content = b'This is some dummy file content'  # Binary content for the file
     dummy_file_name = "dummy_file.txt"
 
