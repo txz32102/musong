@@ -1,46 +1,46 @@
-.cancel-icon {
-  margin-right: 20px;
-  cursor: pointer;
+.InputBar-container {
+    background-color: rgb(255, 249, 249);
+    position: fixed;
+    bottom: 20px;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
 }
 
-.image-icon {
-  margin-right: 0px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
+.TextInput {
+    background-color: rgb(255, 249, 249);
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 120px;
+    overflow-y: auto;
 }
 
-.microphone-icon {
-  margin-left: 0px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
+
+.ImageInput{
+    margin-right: 0px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
 }
 
-
-.input-bar-container {
-  background-color: rgb(255, 249, 249);
-  position: fixed;
-  bottom: 20px;
-  width: 90%;
-  max-width: 600px;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.input-bar {
-  background-color: rgb(255, 249, 249);
-  flex-grow: 1;
-  border: none;
-  outline: none;
-  border-radius: 4px;
-  padding: 10px;
-  font-size: 16px;
+.AudioInput{
+    margin-left: 0px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
 }

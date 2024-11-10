@@ -1,84 +1,65 @@
 import React, { useState } from "react";
-import SvgRender from "./SvgRenderer";
-import UploadData from "./UploadData"; // Import UploadData component
-import DataPreview from "./DataPreview"; // Import DataPreview component
+import { format } from "date-fns";
+import TextInput from "./TextInput";
+import ImageInput from "./ImageInput";
+import AudioInput from "./AudioInput";
 import "./InputBar.css";
 
 const InputBar = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [showUpload, setShowUpload] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
+    // State to hold input values
+    const [text, setText] = useState("");
+    const [image, setImage] = useState(null);
+    const [audio, setAudio] = useState(null);
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
+    const handleSubmit = async () => {
+        const formData = new FormData();
+        formData.append("uid", 123456789); // Ensure it's an integer or proper ID
+        formData.append("text", text);
 
-  const handleCancelClick = () => {
-    setInputValue('');
-    setShowUpload(false);
-  };
+        // Format the timestamp to match the desired format
+        const timestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+        formData.append("timestamp", timestamp);
 
-  const handleUploadSuccess = (audio, image) => {
-    setAudioUrl(audio);
-    setImageUrl(image);
-    setInputValue(''); // Clear input
-    setShowUpload(false); // Hide upload data component
-  };
+        // Handle file inputs
+        if (image) {
+            formData.append("file", image, image.name);
+            formData.append("file_name", image.name);
+        }
+        if (audio) {
+            formData.append("file", audio, audio.name);
+            formData.append("file_name", audio.name);
+        }
 
-  return (
+        // Log FormData contents
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
 
-      <div className="input-bar-container">
-      <input
-        type="text"
-        placeholder="Enter your text here"
-        className="input-bar"
-        value={inputValue}
-        onChange={handleInputChange}
-      />
+        try {
+            const response = await fetch("http://localhost:8000/upload/", {
+                method: "POST",
+                body: formData,
+            });
 
-    {inputValue && (
-            <SvgRender
-              filePath={require('./svg/cancel.svg').default}
-              scale={0.2}
-              className="cancel-icon"
-              onClick={handleCancelClick}
-            />
-          )}
-      <SvgRender
-        filePath={require('./svg/image.svg').default}
-        scale={0.3}
-        className="image-icon"
-        onClick={handleCancelClick}
-      />
+            if (response.ok) {
+                console.log("Data sent successfully!");
+            } else {
+                const errorData = await response.json();
+                console.error("Failed to send data:", errorData);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
 
-      <SvgRender
-        filePath={require('./svg/microphone.svg').default}
-        scale={0.3}
-        className="microphone-icon"
-        onClick={handleCancelClick}
-      />
-
-    <SvgRender
-        filePath={require('./svg/enter.svg').default}
-        scale={0.5}
-        onClick={() => setShowUpload(true)}
-      />
-
-
-      {showUpload && (
-        <UploadData 
-          inputValue={inputValue} 
-          onUploadSuccess={handleUploadSuccess} 
-          setAudioUrl={setAudioUrl} // Pass state setter to UploadData
-          setImageUrl={setImageUrl} // Pass state setter to UploadData
-        />
-      )}
-
-      {/* Data Preview Section */}
-      <DataPreview audioUrl={audioUrl} imageUrl={imageUrl} />
-    </div>
-  );
+    return (
+        <div className="InputBar-container">
+            <TextInput value={text} onChange={(e) => setText(e.target.value)} className="TextInput" />
+            <ImageInput onChange={(e) => setImage(e)} className="ImageInput" />
+            <AudioInput onChange={(e) => setAudio(e.target.files[0])} className="AudioInput" />
+            <button onClick={handleSubmit}>Send</button>
+        </div>
+    );
 };
 
 export default InputBar;

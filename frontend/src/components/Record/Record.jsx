@@ -1,10 +1,12 @@
-import {React, useState} from "react";
-import InputBar from "./InputBar";
+import React from "react";
+import Inputbar from "./InputBar";
+import History from "./History";
 
 const Record = ({}) =>{
     return(
         <div>
-            <InputBar/>
+            <History/>
+            <Inputbar/>
         </div>
     )
 }
