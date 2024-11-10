@@ -1,4 +1,3 @@
-// src/components/Record/InputBar.jsx
 import React, { useState } from "react";
 import TextInput from "./TextInput";
 import ImageInput from "./ImageInput";

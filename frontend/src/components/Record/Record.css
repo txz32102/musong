@@ -1,0 +1,12 @@
+.Record-container {
+    position: relative;
+    height: 100vh;  /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+.History-wrapper {
+    flex: 1;  /* Take up remaining space */
+    overflow-y: auto;  /* Make it scrollable */
+    padding-bottom: 100px;  /* Ensure space for the InputBar */
+}
