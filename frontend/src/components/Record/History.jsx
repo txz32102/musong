@@ -6,11 +6,16 @@ const History = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const apiUrl = process.env.REACT_APP_API_URL;  // Define the URL variable
+  console.log("API URL:", apiUrl);  // Log the URL to the console
+
   // Fetch all history records on component mount
   useEffect(() => {
     const fetchHistoryRecords = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/history');
+        console.log("try sentence")
+        const response = await axios.get(`${apiUrl}/history`);
+        console.log(response);
         // Sort records by timestamp in descending order (new to old)
         const sortedRecords = response.data.records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setRecords(sortedRecords);
@@ -22,14 +27,14 @@ const History = () => {
     };
 
     fetchHistoryRecords();
-  }, []);
+  }, [apiUrl]);  // Depend on apiUrl to re-run the effect if it changes
 
   // Function to handle file download
   const downloadFile = async (recordId) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/history/user/${recordId}/file`, {
+      const response = await axios.get(`${apiUrl}/history/user/${recordId}/file`, {
         responseType: 'blob', // Handle binary data
-      });      
+      });
 
       // Create a Blob from the response data
       const fileBlob = response.data;

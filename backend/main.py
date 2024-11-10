@@ -9,8 +9,9 @@ app = FastAPI()
 
 # CORS configuration
 origins = [
-    "http://localhost",
-    "http://localhost:3000"
+    "http://localhost",  # Local development
+    "http://localhost:3000",  # Local development on port 3000
+    "http://www.druggableprotein.com:3000"  # Allowing requests from the frontend on this URL
 ]
 app.add_middleware(
     CORSMiddleware,
