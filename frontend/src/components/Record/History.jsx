@@ -62,13 +62,22 @@ const History = () => {
   }
 
   return (
-    <div>
+    <div
+      style={{
+        width: '100%',  // Use 100% of the available screen width
+        maxWidth: '100vw', // Ensure it doesn't exceed the viewport width
+        height: '30000px',
+        border: '1px solid black',
+        overflow: 'auto',
+        backgroundColor: '#f0f0f0',
+      }}
+    >
       <h2>All History Records</h2>
       {records.length === 0 ? (
         <p>No records found.</p>
       ) : (
         <ul>
-          {records.map((record) => (
+          {records.slice(0, 400).map((record) => (  // Limit to the first 40 records
             <li key={record.id}>
               <div>
                 <p><strong>Timestamp:</strong> {new Date(record.timestamp).toLocaleString()}</p>
