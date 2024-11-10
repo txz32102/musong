@@ -15,7 +15,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <SearchPage/>,
+    // element: <SearchPage/>,
+    element: <Record/>,
   },
   {
     path: "/recordV1_0",
