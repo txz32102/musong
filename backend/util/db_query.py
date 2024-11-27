@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 import mysql.connector
-from db_con import DBConnection
+from util.db_con import DBConnection
 
 class DBQuery:
     def __init__(self, connection):

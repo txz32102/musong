@@ -5,18 +5,12 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 import mysql.connector
-from util.db_utils import get_db_connection  # Import the utility function to get DB connection
+from util.db_con import DBConnection
+from util.db_query import DBQuery
 import io
 from fastapi.responses import FileResponse
 from fastapi.responses import StreamingResponse
 
-# Connect to the database
-connection = get_db_connection(
-    host='rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com',
-    user='tester1',
-    password='txzchk691X',
-    database='record'
-)
 
 # Pydantic model for representing the 'history' table
 class HistoryRecord(BaseModel):
@@ -36,28 +30,40 @@ router = APIRouter()
 # Fetch history records by user ID
 def get_history_records_by_user(uid: int):
     try:
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT id, uid, timestamp, text, file_name FROM history WHERE uid = %s", (uid,))
-        records = cursor.fetchall()
-        return records
+        connection = DBConnection(
+            host="rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com",
+            user="tester1",
+            password="txzchk691X",
+            database="record"
+        )
+
+        connection.connect()
+        db_query = DBQuery(connection)
+        query = f"SELECT id, uid, timestamp, text, file_name FROM history WHERE uid = {uid}"
+        records = db_query.execute_query(query)
+        return {"records": records}
     except mysql.connector.Error as err:
         raise HTTPException(status_code=500, detail=f"Database error: {err}")
-    finally:
-        cursor.close()
 
 
 # Endpoint to get all history records
 @router.get("/history", response_model=HistoryListResponse)
 async def get_all_history():
     try:
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT id, uid, timestamp, text, file_name FROM history")
-        records = cursor.fetchall()
-        return {"records": [HistoryRecord(**record) for record in records]}
+        connection = DBConnection(
+            host="rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com",
+            user="tester1",
+            password="txzchk691X",
+            database="record"
+        )
+
+        connection.connect()
+        db_query = DBQuery(connection)
+        query = "SELECT id, uid, timestamp, text, file_name FROM history"
+        records = db_query.execute_query(query)
+        return {"records": records}
     except mysql.connector.Error as err:
         raise HTTPException(status_code=500, detail=f"Database error: {err}")
-    finally:
-        cursor.close()
 
 
 # Endpoint to get history records for a specific user
@@ -65,25 +71,3 @@ async def get_all_history():
 async def get_history_by_user(uid: int):
     records = get_history_records_by_user(uid)
     return {"records": [HistoryRecord(**record) for record in records]}
-
-@router.get("/history/user/{uid}/{record_id}/file")
-async def get_file_by_user(uid: int, record_id: int):
-    try:
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT files, file_name FROM history WHERE id = %s AND uid = %s", (record_id, uid))
-        record = cursor.fetchone()  # Fetch the record
-        if record and record["files"]:
-            file_name = record["file_name"] or "default_filename"  # Fallback to a default name if None
-            # Create a BytesIO object to simulate a file-like object
-            file_content = io.BytesIO(record["files"])
-            # Return the file as a StreamingResponse, with the correct file name in the header
-
-            print(file_name)
-            return StreamingResponse(file_content, media_type="application/octet-stream", headers={
-                "Content-Disposition": f"attachment; filename={file_name}"
-            })
-        raise HTTPException(status_code=404, detail="File not found")
-    except mysql.connector.Error as err:
-        raise HTTPException(status_code=500, detail=f"Database error: {err}")
-    finally:
-        cursor.close()
