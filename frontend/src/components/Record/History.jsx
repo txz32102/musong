@@ -29,10 +29,12 @@ const History = () => {
     fetchHistoryRecords();
   }, [apiUrl]);  // Depend on apiUrl to re-run the effect if it changes
 
-  // Function to handle file download
-  const downloadFile = async (recordId) => {
+  // Updated download function with file_name parameter
+  const downloadFile = async (recordId, fileName) => {
+    const fullUrl = `${apiUrl}/history/user/123456789/${recordId}/file`;
+    console.log(fullUrl);
     try {
-      const response = await axios.get(`${apiUrl}/history/user/${recordId}/file`, {
+      const response = await axios.get(fullUrl, {
         responseType: 'blob', // Handle binary data
       });
 
@@ -42,8 +44,7 @@ const History = () => {
       // Create an anchor element to simulate a download
       const link = document.createElement('a');
       link.href = URL.createObjectURL(fileBlob);  // Create a URL for the Blob
-      const filename = response.headers['content-disposition']?.split('filename=')[1] || 'downloaded_file';
-      link.download = filename;  // Extract filename from response headers
+      link.download = fileName;  // Use the provided file_name directly
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);  // Remove the link element after clicking
@@ -52,6 +53,7 @@ const History = () => {
       setError("Error downloading the file.");
     }
   };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -82,7 +84,9 @@ const History = () => {
               <div>
                 <p><strong>Timestamp:</strong> {new Date(record.timestamp).toLocaleString()}</p>
                 <p><strong>Text:</strong> {record.text || 'No text provided'}</p>
-                <button onClick={() => downloadFile(record.id)}>Download File</button>
+                <button onClick={() => downloadFile(record.id, record.file_name)}>
+                  Download {record.file_name}
+                </button>
               </div>
             </li>
           ))}
