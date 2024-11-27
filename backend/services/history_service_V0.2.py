@@ -5,18 +5,12 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 import mysql.connector
-from util.db_utils import get_db_connection  # Import the utility function to get DB connection
+from util.db_con import DBConnection
+from util.db_query import DBQuery
 import io
 from fastapi.responses import FileResponse
 from fastapi.responses import StreamingResponse
 
-# Connect to the database
-connection = get_db_connection(
-    host='rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com',
-    user='tester1',
-    password='txzchk691X',
-    database='record'
-)
 
 # Pydantic model for representing the 'history' table
 class HistoryRecord(BaseModel):
@@ -36,8 +30,17 @@ router = APIRouter()
 # Fetch history records by user ID
 def get_history_records_by_user(uid: int):
     try:
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT id, uid, timestamp, text, file_name FROM history WHERE uid = %s", (uid,))
+        connection = DBConnection(
+            host="rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com",
+            user="tester1",
+            password="txzchk691X",
+            database="record"
+        )
+
+        connection.connect()
+        db_query = DBQuery(connection)
+        query = f"SELECT id, uid, timestamp, text, file_name FROM history WHERE uid = {uid}"
+        db_query.execute_query(query)
         records = cursor.fetchall()
         return records
     except mysql.connector.Error as err:
