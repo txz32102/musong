@@ -59,7 +59,7 @@ async def get_all_history():
 
         connection.connect()
         db_query = DBQuery(connection)
-        query = "SELECT id, uid, timestamp, text, file_name FROM history"
+        query = "SELECT id, uid, timestamp, text, file_name FROM history WHERE is_deleted = 0"
         records = db_query.execute_query(query)
         return {"records": records}
     except mysql.connector.Error as err:

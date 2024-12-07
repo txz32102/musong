@@ -78,19 +78,29 @@ const History = () => {
       {records.length === 0 ? (
         <p>No records found.</p>
       ) : (
-        <ul>
-          {records.slice(0, 400).map((record) => (  // Limit to the first 40 records
-            <li key={record.id}>
-              <div>
-                <p><strong>Timestamp:</strong> {new Date(record.timestamp).toLocaleString()}</p>
-                <p><strong>Text:</strong> {record.text || 'No text provided'}</p>
-                <button onClick={() => downloadFile(record.id, record.file_name)}>
-                  Download {record.file_name}
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {records.slice(0, 400).map((record) => (
+              <li key={record.id}>
+                <div>
+                  <p>
+                    <strong>Timestamp:</strong> {new Date(record.timestamp).toLocaleString()}
+                  </p>
+                  <p>
+                    <strong>Text:</strong> 
+                    <br />
+                    {record.text ? (
+                      <span dangerouslySetInnerHTML={{ __html: record.text.replace(/\r?\n/g, '<br />') }} />
+                    ) : (
+                      'No text provided'
+                    )}
+                  </p>
+                  <button onClick={() => downloadFile(record.id, record.file_name)}>
+                    Download {record.file_name}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
       )}
     </div>
   );

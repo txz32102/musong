@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from storage.upload_handler import router as upload_router  # Import the upload router
 from services.history_service import router as history_router  # Import the history service router
+from services.auth import router as auth_router  # Import the history service router
 
 app = FastAPI()
 
@@ -21,3 +22,4 @@ app.include_router(upload_router)
 app.include_router(history_router)
 
 # Other routes and logic can be added here
+app.include_router(auth_router)

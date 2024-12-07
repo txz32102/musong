@@ -1,6 +1,4 @@
 import React from "react";
-import ViewDebug from "./ViewDebug";
-import InputBarV01 from "./InputBarV01"; // Importing the InputBar component
 import InputBar from "./InputBar";
 import History from "./History";
 

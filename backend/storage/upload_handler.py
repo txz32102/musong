@@ -7,8 +7,8 @@ router = APIRouter()
 
 # SQL query to insert uploaded file data, including the timestamp from the frontend
 INSERT_FILE_QUERY = """
-INSERT INTO history (uid, text, files, file_name, timestamp)
-VALUES (%s, %s, %s, %s, %s)
+INSERT INTO history (uid, text, files, file_name, timestamp, is_deleted)
+VALUES (%s, %s, %s, %s, %s, 0)
 """
 
 @router.post("/upload/")
