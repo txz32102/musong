@@ -39,7 +39,7 @@ def get_history_records_by_user(uid: int):
 
         connection.connect()
         db_query = DBQuery(connection)
-        query = f"SELECT id, uid, timestamp, text, file_name FROM history WHERE uid = {uid}"
+        query = f"SELECT id, uid, timestamp, text, file_path FROM history WHERE uid = {uid}"
         records = db_query.execute_query(query)
         return {"records": records}
     except mysql.connector.Error as err:
@@ -59,7 +59,7 @@ async def get_all_history():
 
         connection.connect()
         db_query = DBQuery(connection)
-        query = "SELECT id, uid, timestamp, text, file_name FROM history WHERE is_deleted = 0"
+        query = "SELECT id, uid, timestamp, text, file_path FROM history WHERE is_deleted = 0"
         records = db_query.execute_query(query)
         return {"records": records}
     except mysql.connector.Error as err:

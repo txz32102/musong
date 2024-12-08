@@ -11,7 +11,7 @@ const LoginForm = () => {
         try {
             // Send the username and password as form data
             const response = await axios.post(
-                "http://localhost:8000/token",
+                process.env.REACT_APP_API_URL + "/token",
                 new URLSearchParams({
                     username: username,
                     password: password,

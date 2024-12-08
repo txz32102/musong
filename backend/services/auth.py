@@ -4,7 +4,27 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Form
+from util.login import *
+from util.db_query import *
+from util.db_con import *
 
+
+## connect to my db
+connection = DBConnection(
+    host="rm-uf6ck3u12o3frjt10jo.mysql.rds.aliyuncs.com",
+    user="tester1",
+    password="txzchk691X",
+    database="record"
+)
+
+connection.connect()
+db_query = DBQuery(connection)
+query = f"SELECT id, uid, timestamp, text, file_path FROM history WHERE uid = {100000000}"
+records = db_query.get_user_by_username("musong")
+
+print(records)
+
+print(1)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # In-memory user data (for demonstration purposes)
@@ -42,11 +62,17 @@ def get_user(db, username: str):
 
 # Token endpoint that now accepts form data
 @router.post("/token")
+@router.get("/token")
 async def login_for_access_token(
     username: str = Form(...),
     password: str = Form(...),
 ):
+    db_query = DBQuery(connection)
+    query = f"SELECT id, uid, timestamp, text, file_path FROM history WHERE uid = {100000000}"
+    records = db_query.get_user_by_username(username)
     user = get_user(fake_users_db, username)
+    print(f"records is {records}")
+    print({"access_token": username, "token_type": "bearer"})
     if not user or not verify_password(password, user.password):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     return {"access_token": username, "token_type": "bearer"}

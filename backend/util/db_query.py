@@ -34,3 +34,23 @@ class DBQuery:
 
     def close_connection(self):
         self.connection.close()
+
+    def get_user_by_username(self, username: str) -> Optional[Dict]:
+        """
+        Retrieves a user by their username from the account table.
+
+        :param username: The username to search for.
+        :return: A dictionary containing the user's data or None if not found.
+        """
+        self._ensure_connection()
+        query = "SELECT * FROM account WHERE username = %s"
+        cursor = self.connection.connection.cursor(dictionary=True)
+        try:
+            cursor.execute(query, (username,))
+            result = cursor.fetchone()
+            return result
+        except mysql.connector.Error as e:
+            print(f"Error executing query: {e}")
+            return None
+        finally:
+            cursor.close()
