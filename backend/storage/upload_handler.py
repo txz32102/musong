@@ -7,8 +7,8 @@ router = APIRouter()
 
 # SQL query to insert uploaded file data, including the timestamp from the frontend
 INSERT_FILE_QUERY = """
-INSERT INTO history (uid, text, files_path, timestamp, is_deleted)
-VALUES (%s, %s, %s, %s, %s, 0)
+INSERT INTO history (uid, text, file_path, timestamp, is_deleted)
+VALUES (%s, %s, %s, %s, 0)
 """
 
 @router.post("/upload/")
@@ -21,7 +21,7 @@ async def upload_file(
     # Initialize file_content and file_name to None if no file is provided
     file_content = None
     file_name = None
-
+    file_path = file_name
     if file:
         # Read the file content if the file is provided
         file_content = await file.read()
@@ -49,7 +49,7 @@ async def upload_file(
 
     try:
         # Insert the file content, metadata, and timestamp into the database
-        cursor.execute(INSERT_FILE_QUERY, (uid, text, file_content, file_name, timestamp))
+        cursor.execute(INSERT_FILE_QUERY, (uid, text, file_path, timestamp))
         connection.commit()
     except mysql.connector.Error as err:
         print(f"Failed to insert file data: {err}")

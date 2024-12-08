@@ -15,12 +15,10 @@ export const submitForm = async ({ text, image, audio, setText, setImage, setAud
 
     // Handle file inputs only if they are provided
     if (image) {
-        formData.append("file", image, image.name);
-        formData.append("file_name", image.name);
+        formData.append("file_path", image, image.name);
     }
     if (audio) {
-        formData.append("file", audio, audio.name);
-        formData.append("file_name", audio.name);
+        formData.append("file_path", audio, audio.name);
     }
 
     try {
