@@ -4,12 +4,8 @@ import History from "./History";
 
 const Record = () => {
   return (
-    <div style={{ position: "relative", minHeight: "100vh" }}>
-      {/* Main content */}
+    <div>
       <History />
-      
-      {/* Input Bar */}
-      {/* <InputBarV01 /> */}
       <InputBar />
     </div>
   );

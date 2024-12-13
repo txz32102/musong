@@ -1,10 +1,16 @@
 .InputBar-container {
     background-color: rgb(255, 249, 249);
-    bottom: 0;
-    width: 100%;
+    position: fixed;
+    bottom: 20px;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
     padding: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
     border-radius: 24px;
+    display: flex;
     align-items: center;
     box-sizing: border-box;
 }
@@ -20,43 +26,21 @@
     resize: none;
     width: 100%;
     box-sizing: border-box;
-    max-height: 100px;
+    max-height: 120px;
     overflow-y: auto;
 }
 
-.ImageInput, .AudioInput {
+
+.ImageInput{
+    margin-right: 0px;
     cursor: pointer;
     width: 30px;
     height: 30px;
-    margin-left: 10px; /* Add space between buttons */
 }
 
-@media (max-width: 600px) {
-    .InputBar-container {
-        padding: 8px;
-        max-width: 100%; /* Make sure it takes up the full width on smaller screens */
-    }
-
-    .TextInput {
-        font-size: 14px;
-        max-height: 80px; /* Adjust the height of the input box for small screens */
-    }
-
-    .ImageInput, .AudioInput {
-        width: 28px;
-        height: 28px;
-    }
+.AudioInput{
+    margin-left: 0px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
 }
-
-@media (min-width: 600px) {
-    .InputBar-container {
-        max-width: 600px;
-        padding: 15px;
-    }
-
-    .TextInput {
-        font-size: 16px;
-        max-height: 120px; /* Adjust the height for larger screens */
-    }
-}
-    

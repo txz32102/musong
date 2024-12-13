@@ -1,8 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import SearchPage from "../components/SearchPage/SearchPage";
 import SearchResult from "../components/SearchResult/SearchResult";
 import Record from "../components/Record/Record";
-import RecordV1_0 from "../components/RecordV1.0/Record";
 import Login from "../components/Login/Login"
 
 const router = createBrowserRouter([
@@ -16,12 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    // element: <SearchPage/>,
     element: <Record/>,
-  },
-  {
-    path: "/recordV1_0",
-    element: <RecordV1_0/>,
   },
   {
     path: "/login",
